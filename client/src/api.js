@@ -27,7 +27,11 @@ const client = axios.create({ baseURL: '/api' });
 
 client.interceptors.request.use((config) => {
   const token = getToken();
-  if (token) config.headers.Authorization = Bearer ${token};
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return config;
 });
 
@@ -38,23 +42,32 @@ client.interceptors.response.use(
       clearSession();
       window.dispatchEvent(new Event('auth:expired'));
     }
+
     return Promise.reject(error);
   }
 );
 
 export async function api(path, { method = 'GET', body } = {}) {
   try {
-    const res = await client({ url: path, method, data: body });
+    const res = await client({
+      url: path,
+      method,
+      data: body
+    });
+
     return res.data;
   } catch (err) {
     const data = err.response?.data;
+
     throw new Error(
-      data?.errors?.join(' • ')  data?.message  'Request failed'
+      data?.errors?.join(' • ') ||
+      data?.message ||
+      'Request failed'
     );
   }
 }
 
 export const fullName = (u) =>
-  (u ? ${u.firstName} ${u.lastName} : 'Unknown');
+  (u ? `${u.firstName} ${u.lastName}` : 'Unknown');
 
 export const formatDate = (d) => new Date(d).toLocaleString();
