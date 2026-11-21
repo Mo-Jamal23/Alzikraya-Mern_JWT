@@ -25,7 +25,7 @@ export default function UploadPhoto() {
     setBusy(true);
     setError('');
     try {
-      const photo = await api('/photos', { method: 'POST', body: data, isForm: true });
+      const photo = await api('/photos', { method: 'POST', body: data });
       navigate(`/photos/${photo._id}`);
     } catch (err) {
       setError(err.message);

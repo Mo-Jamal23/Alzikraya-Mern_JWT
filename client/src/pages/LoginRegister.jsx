@@ -8,7 +8,6 @@ export default function LoginRegister() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [mode, setMode] = useState('login');
-  const [notice, setNotice] = useState('');
 
   if (user) return <Navigate to="/gallery" replace />;
 
@@ -18,16 +17,10 @@ export default function LoginRegister() {
         <button className={`btn btn-outline ${mode === 'login' ? 'active' : ''}`} onClick={() => setMode('login')}>Login</button>
         <button className={`btn btn-outline ${mode === 'register' ? 'active' : ''}`} onClick={() => setMode('register')}>Register</button>
       </div>
-      {notice && <p className="alert alert-success">{notice}</p>}
       {mode === 'login' ? (
         <LoginForm onSuccess={() => navigate('/gallery')} />
       ) : (
-        <RegisterForm
-          onRegistered={() => {
-            setNotice('Account created. Please log in.');
-            setMode('login');
-          }}
-        />
+        <RegisterForm onRegistered={() => navigate('/gallery')} />
       )}
     </div>
   );
