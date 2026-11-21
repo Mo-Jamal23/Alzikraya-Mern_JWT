@@ -22,6 +22,11 @@ app.use('/api/photos', photoRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
+if (!process.env.JWT_SECRET) {
+  console.error('JWT_SECRET is missing in server/.env');
+  process.exit(1);
+}
+
 const port = process.env.PORT || 5050;
 mongoose
   .connect(process.env.MONGODB_URI)
